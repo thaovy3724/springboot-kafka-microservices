@@ -186,5 +186,5 @@ public class OrderTest {
     /* Test case 7: Ném ngoại lệ khi order item price không hợp lệ */
 
 
-    /* Test case 6: Ném ngoại lệ khi order item sub total không hợp lệ */
+    /* Test case 8: Ném ngoại lệ khi order item sub total không hợp lệ */
 }
