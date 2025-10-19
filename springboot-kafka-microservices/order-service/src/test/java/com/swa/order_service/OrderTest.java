@@ -71,7 +71,7 @@ public class OrderTest {
                 .customerId(UUID.randomUUID())
                 .restaurantId(UUID.randomUUID())
                 .deliveryAddress(deliveryAddress)
-                .price(new Money(new BigDecimal("25.00")))
+                .price(totalPrice)
                 .items(orderItems)
                 .build();
         
@@ -174,17 +174,191 @@ public class OrderTest {
     }
 
     /* Test case 4: Ném ngoại lệ khi total price < 0 */
+    @Test
+    @DisplayName("Throw exception when total price is negative")
+    void initializeAndValidateOrderTest_NegativeTotalPrice() {
+        // Arrange
+        Order order = Order.builder()
+                .customerId(UUID.randomUUID())
+                .restaurantId(UUID.randomUUID())
+                .deliveryAddress(deliveryAddress)
+                .price(new Money(new BigDecimal("-10.00")))
+                .items(orderItems)
+                .build();
 
+        // Act & Assert
+        OrderDomainException exception = assertThrows(
+                OrderDomainException.class,
+                () -> order.initializeAndValidateOrder(),
+                "Should throw OrderDomainException when total price is negative"
+        );
+
+        assertEquals("Total price must greater than zero", exception.getMessage());
+
+        // Verify - Không gọi validate order item nào
+        verify(orderItem1, never()).isQuantityValid();
+        verify(orderItem1, never()).isPriceValid();
+        verify(orderItem1, never()).isSubTotalValid();
+        verify(orderItem1, never()).getSubTotal();
+
+        verify(orderItem2, never()).isQuantityValid();
+        verify(orderItem2, never()).isPriceValid();
+        verify(orderItem2, never()).isSubTotalValid();
+        verify(orderItem2, never()).getSubTotal();
+    }
 
     /* Test case 5: Ném ngoại lệ khi tổng sub total của order item khác total
      price */
+    @Test
+    @DisplayName("Throw exception when total price not equal to order items subtotal")
+    void initializeAndValidateOrderTest_TotalPriceMismatch() {
+        // Arrange
+        Money itemPrice1 = new Money(new BigDecimal("10.00"));
+        Money itemPrice2 = new Money(new BigDecimal("15.00"));
+        Money totalPrice = new Money(new BigDecimal("30.00")); // Tổng giá khác subtotal (25.00)
 
+        when(orderItem1.getSubTotal()).thenReturn(itemPrice1);
+        when(orderItem2.getSubTotal()).thenReturn(itemPrice2);
+
+        when(orderItem1.isQuantityValid()).thenReturn(true);
+        when(orderItem1.isPriceValid()).thenReturn(true);
+        when(orderItem1.isSubTotalValid()).thenReturn(true);
+
+        when(orderItem2.isQuantityValid()).thenReturn(true);
+        when(orderItem2.isPriceValid()).thenReturn(true);
+        when(orderItem2.isSubTotalValid()).thenReturn(true);
+
+        Order order = Order.builder()
+                .customerId(UUID.randomUUID())
+                .restaurantId(UUID.randomUUID())
+                .deliveryAddress(deliveryAddress)
+                .price(totalPrice)
+                .items(orderItems)
+                .build();
+
+        // Act & Assert
+        OrderDomainException exception = assertThrows(
+                OrderDomainException.class,
+                () -> order.initializeAndValidateOrder(),
+                "Should throw OrderDomainException when total price not equal to order items subtotal"
+        );
+
+        BigDecimal orderItemsTotal = itemPrice1.getAmount().add(itemPrice2.getAmount());
+
+        assertEquals(
+                String.format("Total price: %s is not equal to Order items total: %s!",
+                        totalPrice.getAmount(), orderItemsTotal),
+                exception.getMessage()
+        );
+
+        // Verify - Các item vẫn được khởi tạo, nhưng validation thất bại ở tổng
+        verify(orderItem1, times(1)).getSubTotal();
+        verify(orderItem2, times(1)).getSubTotal();
+
+        verify(orderItem1, times(1)).isQuantityValid();
+        verify(orderItem1, times(1)).isPriceValid();
+        verify(orderItem1, times(1)).isSubTotalValid();
+
+        verify(orderItem2, times(1)).isQuantityValid();
+        verify(orderItem2, times(1)).isPriceValid();
+        verify(orderItem2, times(1)).isSubTotalValid();
+    }
 
     /* Test case 6: Ném ngoại lệ khi order item quantity không hợp lệ */
+    @Test
+    @DisplayName("Throw exception when order item quantity is invalid")
+    void initializeAndValidateOrderTest_InvalidQuantity() {
+        // arrage
+        Order order = Order.builder()
+                .customerId(UUID.randomUUID())
+                .restaurantId(UUID.randomUUID())
+                .deliveryAddress(deliveryAddress)
+                .price(new Money(new BigDecimal("10.00")))
+                .items(orderItems)
+                .build();
 
+        when(orderItem1.isQuantityValid()).thenReturn(false);
+
+        //act
+        OrderDomainException exception = assertThrows(
+                OrderDomainException.class,
+                () -> order.initializeAndValidateOrder(),
+                "Should throw OrderDomainException when quantity is invalid"
+        );
+
+        // assert
+        assertEquals("Quantity is invalid",
+                exception.getMessage());
+
+        // verify
+        verify(orderItem1, times(1)).isQuantityValid();
+        verify(orderItem1, never()).isPriceValid();
+        verify(orderItem1, never()).isSubTotalValid();
+        verify(orderItem1, never()).getSubTotal();
+    }
 
     /* Test case 7: Ném ngoại lệ khi order item price không hợp lệ */
+    @Test
+    @DisplayName("Throw exception when order item price is invalid")
+    void initializeAndValidateOrderTest_InvalidPrice() {
+        // arrage
+        Order order = Order.builder()
+                .customerId(UUID.randomUUID())
+                .restaurantId(UUID.randomUUID())
+                .deliveryAddress(deliveryAddress)
+                .price(new Money(new BigDecimal("10.00")))
+                .items(orderItems)
+                .build();
+        when(orderItem1.isQuantityValid()).thenReturn(true);
+        when(orderItem1.isPriceValid()).thenReturn(false);
 
+        OrderDomainException exception = assertThrows(
+                OrderDomainException.class,
+                () -> order.initializeAndValidateOrder(),
+                "Should throw OrderDomainException when quantity is invalid"
+        );
+
+        // assert
+        assertEquals("Product's price is invalid",
+                exception.getMessage());
+
+        // verify
+        verify(orderItem1, times(1)).isQuantityValid();
+        verify(orderItem1, times(1)).isPriceValid();
+        verify(orderItem1, never()).isSubTotalValid();
+        verify(orderItem1, never()).getSubTotal();
+    }
 
     /* Test case 8: Ném ngoại lệ khi order item sub total không hợp lệ */
+    @Test
+    @DisplayName("Throw exception when order item sub total is valid")
+    void initializeAndValidateOrderTest_InvalidSubTotal() {
+        // arrage
+        Order order = Order.builder()
+                .customerId(UUID.randomUUID())
+                .restaurantId(UUID.randomUUID())
+                .deliveryAddress(deliveryAddress)
+                .price(new Money(new BigDecimal("10.00")))
+                .items(orderItems)
+                .build();
+        when(orderItem1.isQuantityValid()).thenReturn(true);
+        when(orderItem1.isPriceValid()).thenReturn(true);
+        when(orderItem1.isSubTotalValid()).thenReturn(false);
+
+        OrderDomainException exception = assertThrows(
+                OrderDomainException.class,
+                () -> order.initializeAndValidateOrder(),
+                "Should throw OrderDomainException when sub total is invalid"
+        );
+
+        // assert
+        assertEquals("Subtotal is invalid",
+                exception.getMessage());
+
+        // verify
+        verify(orderItem1, times(1)).isQuantityValid();
+        verify(orderItem1, times(1)).isPriceValid();
+        verify(orderItem1, times(1)).isSubTotalValid();
+        verify(orderItem1, never()).getSubTotal();
+    }
 }
