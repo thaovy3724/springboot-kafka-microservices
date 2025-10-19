@@ -49,6 +49,10 @@ public class OrderEntity {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderAddressEntity address;
 
+    // 1-1 Relationship
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private OrderRatingEntity rating;
+
     // 1-many Relationship
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items;

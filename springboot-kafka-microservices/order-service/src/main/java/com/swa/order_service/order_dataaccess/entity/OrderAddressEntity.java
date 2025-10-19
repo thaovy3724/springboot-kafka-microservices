@@ -18,7 +18,8 @@ public class OrderAddressEntity {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @MapsId
+    @JoinColumn(name = "id", nullable = false)
     private OrderEntity order;
 
     @Column(nullable = false)

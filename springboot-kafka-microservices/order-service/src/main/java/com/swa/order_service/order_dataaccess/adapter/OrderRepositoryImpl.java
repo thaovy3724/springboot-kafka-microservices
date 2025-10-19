@@ -1,11 +1,20 @@
 package com.swa.order_service.order_dataaccess.adapter;
 
 import com.swa.order_service.order_dataaccess.entity.OrderEntity;
+import com.swa.order_service.order_dataaccess.entity.OrderRatingEntity;
 import com.swa.order_service.order_dataaccess.mapper.OrderJpaMapper;
 import com.swa.order_service.order_dataaccess.repository.OrderJpaRepository;
 import com.swa.order_service.order_domain.order_application_service.ports.output.OrderRepository;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
+import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderRepositoryImpl implements OrderRepository {
@@ -31,11 +40,35 @@ public class OrderRepositoryImpl implements OrderRepository {
         //Step1:Domain->JPAEntity
         OrderEntity orderEntity=mapper
                 .orderToOrderEntity(order);
+        orderEntity.getAddress().setOrder(orderEntity);
         //Step2:Save to database
         OrderEntity savedEntity=orderJpaRepository.save(orderEntity);
         //Step3:JPAEntity->Domain
         return mapper
                 .orderEntityToOrder(savedEntity);
+    }
+
+    @Override
+    public List<Order> getOrderByCustomerId(UUID customerId){
+        List<OrderEntity> orderEntities = orderJpaRepository.findByCustomerId(customerId);
+        return orderEntities.stream().map(orderEntity ->
+                mapper.orderEntityToOrder(orderEntity))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+     public long getTotalOrders(){
+        return orderJpaRepository.getTotalOrders();
+    }
+
+    @Override
+    public BigDecimal calculateTotalRevenue(){
+        return orderJpaRepository.calculateTotalRevenue();
+    }
+
+    @Override
+    public BigDecimal calculateAvgOrderValue(){
+        return orderJpaRepository.calculateAvgOrderValue();
     }
 //    @Override
 //    public Optional<Order>findById(OrderId orderId){
@@ -44,10 +77,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 //                .map(orderDataAccessMapper::orderEntityToOrder);
 //    }
 //
-//    @Override
-//    public Optional<Order>findByTrackingId(TrackingId trackingId){
-//        return orderJpaRepository
-//                .findByTrackingId(trackingId.getValue())
-//                .map(orderDataAccessMapper::orderEntityToOrder);
-//    }
+    @Override
+    public Optional<Order>findByTrackingId(UUID trackingId){
+        return orderJpaRepository
+                .findByTrackingId(trackingId)
+                .map(mapper::orderEntityToOrder);
+    }
+
+    @Override
+    public int updateRatingByTrackingId(UUID trackingId, OrderRating orderRating){
+        OrderRatingEntity orderRatingEntity = mapper.orderRatingToOrderRatingEntity(orderRating);
+        return orderJpaRepository.updateRatingByTrackingId(trackingId, orderRatingEntity);
+    }
 }

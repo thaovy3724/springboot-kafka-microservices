@@ -25,16 +25,14 @@ public class CreateOrderHandler {
 
         // Business Logic
         String message = "Create order success!";
-        Order orderSaved;
-        try {
-            order.initializeAndValidateOrder();
-            orderSaved = repository.save(order);
-        }catch(OrderDomainException e){
-            throw e;
-        }
+
+        order.initializeAndValidateOrder();
+        Order orderSaved = repository.save(order);
+         if(orderSaved == null)
+             throw new OrderDomainException("Order can not be saved");
 
         // Save to the Database and return Response DTO
-        return mapper.orderToCreateOrderResponse(order, message);
+        return mapper.orderToCreateOrderResponse(orderSaved, message);
     }
 }
 

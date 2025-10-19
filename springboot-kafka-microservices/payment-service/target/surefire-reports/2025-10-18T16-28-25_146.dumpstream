@@ -1,0 +1,5 @@
+# Created at 2025-10-18T16:28:25.508
+Boot Manifest-JAR contains absolute paths in classpath 'D:\test\springboot-kafka-microservices\springboot-kafka-microservices\payment-service\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

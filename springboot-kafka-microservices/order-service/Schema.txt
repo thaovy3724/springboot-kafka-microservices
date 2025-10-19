@@ -55,16 +55,27 @@
 	-- =====================================================
 	CREATE TABLE IF NOT EXISTS order_service.order_address (
 	    id UUID NOT NULL,
-	    order_id UUID NOT NULL UNIQUE,
 	    street VARCHAR(255) NOT NULL,
 	    postal_code VARCHAR(50) NOT NULL,
 	    city VARCHAR(100) NOT NULL,
 	    CONSTRAINT order_address_pkey PRIMARY KEY (id),
-	    CONSTRAINT fk_order_address_order FOREIGN KEY (order_id)
+	    CONSTRAINT fk_order_address_order FOREIGN KEY (id)
 	        REFERENCES order_service.orders (id)
 	        ON DELETE CASCADE
 	);
 
+    -- =====================================================
+	-- TABLE: order_rating (owned entity / value object)
+	-- =====================================================
+	CREATE TABLE IF NOT EXISTS order_service.order_rating (
+	    id UUID NOT NULL,
+	    star INT NOT NULL,
+	    comment text,
+	    CONSTRAINT order_rating_pkey PRIMARY KEY (id),
+	    CONSTRAINT fk_order_rating_order FOREIGN KEY (id)
+	        REFERENCES order_service.orders (id)
+	        ON DELETE CASCADE
+	);
 	-- =====================================================
 	-- INDEXES for performance
 	-- =====================================================

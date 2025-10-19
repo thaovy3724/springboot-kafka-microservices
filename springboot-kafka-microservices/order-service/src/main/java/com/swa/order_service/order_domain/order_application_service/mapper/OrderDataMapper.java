@@ -1,16 +1,23 @@
 package com.swa.order_service.order_domain.order_application_service.mapper;
 
 import com.swa.order_service.order_domain.order_application_service.dto.Address;
-import com.swa.order_service.order_domain.order_application_service.dto.OrderItem;
+import com.swa.order_service.order_domain.order_application_service.dto.Item;
+import com.swa.order_service.order_domain.order_application_service.dto.Rating;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
+import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.Money;
+import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,15 +29,15 @@ public class OrderDataMapper {
                 .restaurantId(command.getRestaurantId())
                 .price(new Money(command.getPrice()))
                 .deliveryAddress(addressToDeliveryAddress(command.getAddress()))
-                .items(orderItemsToOrderItemEntities(command.getItems()))
+                .items(itemsToOrderItems(command.getItems()))
                 .build();
     }
 
-    private List<com.swa.order_service.order_domain.order_domain_core.entity.OrderItem> orderItemsToOrderItemEntities(
-            @NotNull List<OrderItem> orderItems) {
+    private List<OrderItem> itemsToOrderItems(
+            @NotNull List<Item> orderItems) {
         return orderItems.stream().map(
                         orderItem ->
-                                com.swa.order_service.order_domain.order_domain_core.entity.OrderItem.builder()
+                                OrderItem.builder()
                                         .productId(orderItem.getProductId())
                                         .quantity(orderItem.getQuantity())
                                         .price(new Money(orderItem.getPrice()))
@@ -55,5 +62,52 @@ public class OrderDataMapper {
                 .build();
     }
 
+    private List<Item> orderItemsToItems(@NotNull List<OrderItem> orderItems){
+        return orderItems.stream().map(
+                orderItem -> Item.builder()
+                        .productId(orderItem.getProductId())
+                        .quantity(orderItem.getQuantity())
+                        .price(orderItem.getPrice().getAmount())
+                        .subTotal(orderItem.getSubTotal().getAmount())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    private Address deliveryAddressToAddress(DeliveryAddress deliveryAddress){
+        return Address.builder()
+                .street(deliveryAddress.getStreet())
+                .postalCode(deliveryAddress.getPostalCode())
+                .city(deliveryAddress.getCity())
+                .build();
+    }
+
+    public HistoryOrderResponse orderToHistoryOrderResponse(Order order){
+        return HistoryOrderResponse.builder()
+                .trackingId(order.getTrackingId())
+                .restaurantId(order.getRestaurantId())
+                .price(order.getPrice().getAmount())
+                .items(orderItemsToItems(order.getItems()))
+                .address(deliveryAddressToAddress(order.getDeliveryAddress()))
+                .orderStatus(order.getOrderStatus())
+                .failureMessage(order.getFailureMessages())
+                .createdAt(order.getCreatedAt())
+                .build();
+    }
+
+    public OrderRating ratingToOrderRating(Rating rating){
+        return OrderRating.builder()
+                .star(rating.getStar())
+                .comment(rating.getComment())
+                .build();
+    }
+
+    public RateOrderResponse toRateOrderResponse(UUID trackingId, Rating rating, String message){
+        return RateOrderResponse.builder()
+                .trackingId(trackingId)
+                .rating(rating)
+                .message(message)
+                .build();
+    }
 }
 

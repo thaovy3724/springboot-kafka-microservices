@@ -33,7 +33,7 @@ public class OrderItem {
     }
 
     public boolean isSubTotalValid(){
-        return subTotal != null && subTotal.equals(price.multiply(new Money(new BigDecimal(quantity))));
+        return subTotal != null && subTotal.equals(price.multiply(quantity));
     }
 
 }

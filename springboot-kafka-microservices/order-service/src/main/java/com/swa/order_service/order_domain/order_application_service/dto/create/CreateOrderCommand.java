@@ -1,11 +1,10 @@
 package com.swa.order_service.order_domain.order_application_service.dto.create;
 
 import com.swa.order_service.order_domain.order_application_service.dto.Address;
-import com.swa.order_service.order_domain.order_application_service.dto.OrderItem;
-import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
+import com.swa.order_service.order_domain.order_application_service.dto.Item;
 import lombok.Builder;
 import lombok.Getter;
-import org.antlr.v4.runtime.misc.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,7 +20,7 @@ public class CreateOrderCommand {
     @NotNull
     private final BigDecimal price;
     @NotNull
-    private final List<OrderItem> items;
+    private final List<Item> items;
     @NotNull
     private final Address address;
 }

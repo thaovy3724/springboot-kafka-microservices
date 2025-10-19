@@ -19,8 +19,8 @@ public class Money {
         return new Money(amount.add(money.getAmount()));
     }
 
-    public Money multiply(Money money){
-        return new Money(amount.multiply(money.getAmount()));
+    public Money multiply(int quantity){
+        return new Money(amount.multiply(new BigDecimal(quantity)));
     }
 
     public BigDecimal getAmount(){

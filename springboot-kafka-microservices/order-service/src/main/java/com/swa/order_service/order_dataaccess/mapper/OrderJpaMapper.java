@@ -3,10 +3,12 @@ package com.swa.order_service.order_dataaccess.mapper;
 import com.swa.order_service.order_dataaccess.entity.OrderAddressEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderItemEntity;
+import com.swa.order_service.order_dataaccess.entity.OrderRatingEntity;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
 import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.Money;
+import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -56,7 +58,6 @@ public class OrderJpaMapper {
 
     private OrderAddressEntity deliveryAddressToOrderAddressEntity(DeliveryAddress deliveryAddress) {
         return OrderAddressEntity.builder()
-                .id(UUID.randomUUID())
                 .city(deliveryAddress.getCity())
                 .street(deliveryAddress.getStreet())
                 .postalCode(deliveryAddress.getPostalCode())
@@ -68,6 +69,7 @@ public class OrderJpaMapper {
                 .orderId(orderEntity.getId())
                 .customerId(orderEntity.getCustomerId())
                 .restaurantId(orderEntity.getRestaurantId())
+                .price(new Money(orderEntity.getPrice()))
                 .trackingId(orderEntity.getTrackingId())
                 .failureMessages(!orderEntity.getFailureMessages().isEmpty() ?
                         Arrays.asList(orderEntity.getFailureMessages().split(";"))
@@ -100,6 +102,10 @@ public class OrderJpaMapper {
                 .build();
     }
 
+    public OrderRatingEntity orderRatingToOrderRatingEntity(OrderRating orderRating){
+        return OrderRatingEntity.builder()
 
+                .build();
+    }
 }
 
