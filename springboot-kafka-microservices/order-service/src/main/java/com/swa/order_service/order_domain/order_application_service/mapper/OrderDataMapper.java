@@ -17,7 +17,6 @@ import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,10 +101,17 @@ public class OrderDataMapper {
                 .build();
     }
 
-    public RateOrderResponse toRateOrderResponse(UUID trackingId, Rating rating, String message){
+    private Rating orderRatingToRating(OrderRating orderRating){
+        return Rating.builder()
+                .star(orderRating.getStar())
+                .comment(orderRating.getComment())
+                .build();
+    }
+
+    public RateOrderResponse toRateOrderResponse(Order order, String message){
         return RateOrderResponse.builder()
-                .trackingId(trackingId)
-                .rating(rating)
+                .trackingId(order.getTrackingId())
+                .rating(orderRatingToRating(order.getRating()))
                 .message(message)
                 .build();
     }

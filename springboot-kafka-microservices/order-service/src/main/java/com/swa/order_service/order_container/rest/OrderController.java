@@ -49,7 +49,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<HistoryOrderResponse>> getOrderByCustomerId(
-            @RequestParam("customerId") UUID customerId){
+            @NotNull @RequestParam("customerId") UUID customerId){
         // Log request
         log.info("Get history order of customer_id: {}",
                 customerId);
@@ -63,7 +63,7 @@ public class OrderController {
     }
 
     @GetMapping("/statistics")
-    public ResponseEntity<StatisticsResponse> getStatistic(){
+    public ResponseEntity<StatisticsResponse> getStatistics(){
         // Delegate to use case (Input Port)
         StatisticsResponse response =
                 orderApplicationService.getStatistics();

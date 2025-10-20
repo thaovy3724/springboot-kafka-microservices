@@ -14,12 +14,5 @@ public interface OrderRepository {
     long getTotalOrders();
     BigDecimal calculateTotalRevenue();
     BigDecimal calculateAvgOrderValue();
-//    //FindbyID
-//    Optional<Order>findById(OrderIdorderId);
-//
-    //Find by tracking ID
     Optional<Order> findByTrackingId(UUID trackingId);
-
-    // Update rating
-    int updateRatingByTrackingId(UUID trackingId, OrderRating orderRating);
 }

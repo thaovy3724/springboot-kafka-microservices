@@ -24,7 +24,7 @@ public class RateOrderHandler {
     }
 
     public RateOrderResponse rateOrder(RateOrderCommand command){
-        // find order by tracking_id
+        // Find order by tracking_id
         Order order = repository.findByTrackingId(command.getTrackingId())
                 .orElseThrow(()->
                         new OrderNotFoundException("Cannot find order with tracking_id" + command.getTrackingId())
@@ -32,16 +32,15 @@ public class RateOrderHandler {
 
         // Business Logic
         String message = "Rating order success!";
-
-        order.validateRating();
-
         OrderRating orderRating = mapper.ratingToOrderRating(command.getRating());
-        int rowCount = repository.updateRatingByTrackingId(command.getTrackingId(), orderRating);
-        if(rowCount != 1)
+
+        order.validateAndInitializeRating(orderRating);
+
+        Order orderSaved = repository.save(order);
+        if(orderSaved == null)
             throw new OrderDomainException("Order rating can not be updated");
 
-        // return Response DTO
-        return mapper.toRateOrderResponse(command.getTrackingId(), command.getRating(), message);
-
+        // Return Response DTO
+        return mapper.toRateOrderResponse(orderSaved, "Rating successfully");
     }
 }

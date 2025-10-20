@@ -24,15 +24,13 @@ public class CreateOrderHandler {
         // [Optional] Call interface methods relate to database (ex: isCustomerExist())
 
         // Business Logic
-        String message = "Create order success!";
-
         order.initializeAndValidateOrder();
         Order orderSaved = repository.save(order);
          if(orderSaved == null)
              throw new OrderDomainException("Order can not be saved");
 
-        // Save to the Database and return Response DTO
-        return mapper.orderToCreateOrderResponse(orderSaved, message);
+        // Return Response DTO
+        return mapper.orderToCreateOrderResponse(orderSaved, "Create order successfully!");
     }
 }
 

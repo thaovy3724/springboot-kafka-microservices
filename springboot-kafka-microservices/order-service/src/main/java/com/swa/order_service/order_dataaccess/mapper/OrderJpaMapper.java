@@ -4,6 +4,7 @@ import com.swa.order_service.order_dataaccess.entity.OrderAddressEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderItemEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderRatingEntity;
+import com.swa.order_service.order_domain.order_application_service.dto.Rating;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
 import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
@@ -15,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +33,7 @@ public class OrderJpaMapper {
                 .orderStatus(order.getOrderStatus())
                 .failureMessages(order.getFailureMessages() != null ?
                         String.join(";", order.getFailureMessages()) : "")
+                .rating(order.getRating() != null ? orderRatingToOrderRatingEntity(order.getRating()) : null)
                 .createdAt(order.getCreatedAt())
                 .build();
 
@@ -41,7 +42,17 @@ public class OrderJpaMapper {
         orderEntity.getAddress().setOrder(orderEntity);
         // Order <-> OrderItem
         orderEntity.getItems().forEach(orderItemEntity -> orderItemEntity.setOrder(orderEntity));
+        // Order <-> OrderRating
+        if(orderEntity.getRating() != null)
+            orderEntity.getRating().setOrder(orderEntity);
         return orderEntity;
+    }
+
+    private OrderRatingEntity orderRatingToOrderRatingEntity(OrderRating rating) {
+        return OrderRatingEntity.builder()
+                .star(rating.getStar())
+                .comment(rating.getComment())
+                .build();
     }
 
     private List<OrderItemEntity> orderItemsToOrderItemsEntities(List<OrderItem> orderItems) {
@@ -58,6 +69,7 @@ public class OrderJpaMapper {
 
     private OrderAddressEntity deliveryAddressToOrderAddressEntity(DeliveryAddress deliveryAddress) {
         return OrderAddressEntity.builder()
+                .id(deliveryAddress.getId())
                 .city(deliveryAddress.getCity())
                 .street(deliveryAddress.getStreet())
                 .postalCode(deliveryAddress.getPostalCode())
@@ -77,6 +89,16 @@ public class OrderJpaMapper {
                 .orderStatus(orderEntity.getOrderStatus())
                 .deliveryAddress(addressToDeliveryAddress(orderEntity.getAddress()))
                 .items(orderItemEntitiesToOrderItems(orderEntity.getItems()))
+                .rating(orderEntity.getRating() != null ?
+                        orderRatingEntityToOrderRating(orderEntity.getRating()) : null)
+                .createdAt(orderEntity.getCreatedAt())
+                .build();
+    }
+
+    private OrderRating orderRatingEntityToOrderRating(OrderRatingEntity orderRatingEntity){
+        return OrderRating.builder()
+                .star(orderRatingEntity.getStar())
+                .comment(orderRatingEntity.getComment())
                 .build();
     }
 
@@ -96,15 +118,10 @@ public class OrderJpaMapper {
 
     private DeliveryAddress addressToDeliveryAddress(OrderAddressEntity address) {
         return DeliveryAddress.builder()
+                .id(address.getId())
                 .city(address.getCity())
                 .street(address.getStreet())
                 .postalCode(address.getPostalCode())
-                .build();
-    }
-
-    public OrderRatingEntity orderRatingToOrderRatingEntity(OrderRating orderRating){
-        return OrderRatingEntity.builder()
-
                 .build();
     }
 }

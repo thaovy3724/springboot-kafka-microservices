@@ -40,7 +40,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         //Step1:Domain->JPAEntity
         OrderEntity orderEntity=mapper
                 .orderToOrderEntity(order);
-        orderEntity.getAddress().setOrder(orderEntity);
         //Step2:Save to database
         OrderEntity savedEntity=orderJpaRepository.save(orderEntity);
         //Step3:JPAEntity->Domain
@@ -82,11 +81,5 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderJpaRepository
                 .findByTrackingId(trackingId)
                 .map(mapper::orderEntityToOrder);
-    }
-
-    @Override
-    public int updateRatingByTrackingId(UUID trackingId, OrderRating orderRating){
-        OrderRatingEntity orderRatingEntity = mapper.orderRatingToOrderRatingEntity(orderRating);
-        return orderJpaRepository.updateRatingByTrackingId(trackingId, orderRatingEntity);
     }
 }

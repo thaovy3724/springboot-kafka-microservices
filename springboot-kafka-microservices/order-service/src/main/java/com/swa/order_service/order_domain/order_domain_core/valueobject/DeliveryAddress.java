@@ -14,6 +14,9 @@ public class DeliveryAddress {
     private final String postalCode;
     private final String city;
 
+    // mutable
+    private UUID id;
+
     public void validateDeliveryAddress() throws OrderDomainException {
         if(street == null || street.isEmpty())
             throw new OrderDomainException("Street cannot be null or empty");

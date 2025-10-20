@@ -22,8 +22,8 @@ public class Order {
     private final DeliveryAddress deliveryAddress;
     private final Money price;
     private final List<OrderItem> items;
-    private final OrderRating rating;
     // Mutable fields - can be changed via business logic
+    private OrderRating rating;
     private UUID orderId;
     private UUID trackingId;
     private OrderStatus orderStatus;
@@ -95,13 +95,18 @@ public class Order {
         validateOrder();
     }
 
-    public void validateRating() throws OrderDomainException{
+    private void validateRating(OrderRating orderRating) throws OrderDomainException{
         // check the order status: if the order status is APPROVED, allow to rate order
         if(orderStatus != OrderStatus.APPROVED)
             throw new OrderDomainException("Order is not in correct state for rate");
         // validate the rating
-        if(!rating.validateRating())
+        if(!orderRating.validateRating())
             throw new OrderDomainException("You can only rate from 1 to 5 star");
+    }
+
+    public void validateAndInitializeRating(OrderRating orderRating){
+        validateRating(orderRating);
+        rating = orderRating;
     }
     /**
      * BUSINESS LOGIC: Mark order as PAID
