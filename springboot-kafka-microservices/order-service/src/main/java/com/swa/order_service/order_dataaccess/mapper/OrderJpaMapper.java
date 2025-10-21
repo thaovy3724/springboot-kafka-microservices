@@ -4,7 +4,6 @@ import com.swa.order_service.order_dataaccess.entity.OrderAddressEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderItemEntity;
 import com.swa.order_service.order_dataaccess.entity.OrderRatingEntity;
-import com.swa.order_service.order_domain.order_application_service.dto.Rating;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
 import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
@@ -12,7 +11,6 @@ import com.swa.order_service.order_domain.order_domain_core.valueobject.Money;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

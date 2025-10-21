@@ -6,6 +6,8 @@ import com.swa.order_service.order_domain.order_application_service.dto.history.
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.AddOrderItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.AddOrderItemsResponse;
 import com.swa.order_service.order_domain.order_application_service.ports.input.OrderApplicationService;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,11 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
     @Override
     public RateOrderResponse rateOrder(RateOrderCommand command){
         return rateOrderHandler.rateOrder(command);
+    }
+
+    // UseCase: Add order items
+    AddOrderItemsResponse updateAddOrderItems(AddOrderItemsCommand command){
+        return
     }
     // Use Case: Track order
 //    @Override

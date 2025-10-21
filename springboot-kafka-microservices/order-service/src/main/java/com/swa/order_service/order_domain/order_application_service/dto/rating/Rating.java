@@ -1,4 +1,4 @@
-package com.swa.order_service.order_domain.order_application_service.dto;
+package com.swa.order_service.order_domain.order_application_service.dto.rating;
 
 import lombok.Builder;
 import lombok.Getter;

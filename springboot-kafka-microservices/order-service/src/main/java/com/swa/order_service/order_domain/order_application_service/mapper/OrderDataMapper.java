@@ -2,7 +2,7 @@ package com.swa.order_service.order_domain.order_application_service.mapper;
 
 import com.swa.order_service.order_domain.order_application_service.dto.Address;
 import com.swa.order_service.order_domain.order_application_service.dto.Item;
-import com.swa.order_service.order_domain.order_application_service.dto.Rating;
+import com.swa.order_service.order_domain.order_application_service.dto.rating.Rating;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
@@ -13,7 +13,6 @@ import com.swa.order_service.order_domain.order_domain_core.valueobject.Delivery
 import com.swa.order_service.order_domain.order_domain_core.valueobject.Money;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

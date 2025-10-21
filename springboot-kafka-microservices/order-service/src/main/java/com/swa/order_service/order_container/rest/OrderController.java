@@ -6,6 +6,8 @@ import com.swa.order_service.order_domain.order_application_service.dto.history.
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.AddOrderItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.AddOrderItemsResponse;
 import com.swa.order_service.order_domain.order_application_service.ports.input.OrderApplicationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -85,5 +87,21 @@ public class OrderController {
         log.info("Order is rated: {}", response);
         // Return HTTP 201 Created
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/items")
+    public ResponseEntity<AddOrderItemsResponse> updateOrder(
+            @Valid @RequestBody AddOrderItemsCommand command){
+        // Log input
+        log.info("Updating order with ID: {}",
+                command.getTrackingId()
+        );
+        AddOrderItemsResponse response = orderApplicationService.updateAddOrderItems(command);
+
+        // Log success
+        // Return HTTP 200 OK
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 }
