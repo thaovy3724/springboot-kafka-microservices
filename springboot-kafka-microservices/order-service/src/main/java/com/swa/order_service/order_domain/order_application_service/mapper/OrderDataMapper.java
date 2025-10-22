@@ -8,13 +8,13 @@ import com.swa.order_service.order_domain.order_application_service.dto.create.C
 import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.delete.UpdateDelItemsResponse;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
 import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.Money;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.OrderRating;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -119,6 +119,14 @@ public class OrderDataMapper {
 
     public UpdateAddItemsResponse orderToUpdateAddItemsResponse(Order order, String message) {
         return UpdateAddItemsResponse.builder()
+                .trackingId(order.getTrackingId())
+                .items(orderItemsToItems(order.getItems()))
+                .message(message)
+                .build();
+    }
+
+    public UpdateDelItemsResponse orderToUpdateDeleteItemsResponse(Order order, String message) {
+        return UpdateDelItemsResponse.builder()
                 .trackingId(order.getTrackingId())
                 .items(orderItemsToItems(order.getItems()))
                 .message(message)
