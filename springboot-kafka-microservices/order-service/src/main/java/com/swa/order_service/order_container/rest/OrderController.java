@@ -6,6 +6,8 @@ import com.swa.order_service.order_domain.order_application_service.dto.history.
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
 import com.swa.order_service.order_domain.order_application_service.ports.input.OrderApplicationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,21 @@ public class OrderController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @PutMapping("/update/add")
+    public ResponseEntity<UpdateAddItemsResponse> updateAddItem(
+            @Valid @RequestBody UpdateAddItemsCommand updateAddOrderItemsCommand
+    ) {
+        log.info("Update - adding items for order with ID: {}",
+                updateAddOrderItemsCommand.getTrackingId()
+        );
+        UpdateAddItemsResponse response =
+                orderApplicationService.updateAddItems(
+                        updateAddOrderItemsCommand
+                );
+        log.info("Update add order items result: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
