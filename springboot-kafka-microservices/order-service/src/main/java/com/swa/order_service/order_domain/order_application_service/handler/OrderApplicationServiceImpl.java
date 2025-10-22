@@ -1,11 +1,14 @@
 package com.swa.order_service.order_domain.order_application_service.handler;
 
+import com.swa.order_service.order_domain.order_application_service.dto.Item;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
 import com.swa.order_service.order_domain.order_application_service.ports.input.OrderApplicationService;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +21,20 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
     private final HistoryOrderHandler historyOrderHandler;
     private final StatisticsHandler statisticsHandler;
     private final RateOrderHandler rateOrderHandler;
+    private final UpdateAddItemsHandler updateAddItemsHandler;
 
-    public OrderApplicationServiceImpl(CreateOrderHandler createOrderHandler, HistoryOrderHandler historyOrderHandler, StatisticsHandler statisticsHandler, RateOrderHandler rateOrderHandler) {
+    public OrderApplicationServiceImpl(
+            CreateOrderHandler createOrderHandler,
+            HistoryOrderHandler historyOrderHandler,
+            StatisticsHandler statisticsHandler,
+            RateOrderHandler rateOrderHandler,
+            UpdateAddItemsHandler updateAddItemsHandler
+    ) {
         this.createOrderHandler = createOrderHandler;
         this.historyOrderHandler = historyOrderHandler;
         this.statisticsHandler = statisticsHandler;
         this.rateOrderHandler = rateOrderHandler;
+        this.updateAddItemsHandler = updateAddItemsHandler;
     }
 //    private final TrackOrderHandler trackOrderHandler;
 //    private final CancelOrderHandler cancelOrderHandler;
@@ -50,6 +61,11 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
     @Override
     public RateOrderResponse rateOrder(RateOrderCommand command){
         return rateOrderHandler.rateOrder(command);
+    }
+
+    @Override
+    public UpdateAddItemsResponse updateAddItems(UpdateAddItemsCommand command) {
+        return updateAddItemsHandler.updateAddItems(command);
     }
     // Use Case: Track order
 //    @Override
