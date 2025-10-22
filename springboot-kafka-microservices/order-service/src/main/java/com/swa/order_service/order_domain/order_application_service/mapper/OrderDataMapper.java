@@ -7,6 +7,7 @@ import com.swa.order_service.order_domain.order_application_service.dto.create.C
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
 import com.swa.order_service.order_domain.order_domain_core.entity.Order;
 import com.swa.order_service.order_domain.order_domain_core.entity.OrderItem;
 import com.swa.order_service.order_domain.order_domain_core.valueobject.DeliveryAddress;
@@ -32,7 +33,7 @@ public class OrderDataMapper {
                 .build();
     }
 
-    private List<OrderItem> itemsToOrderItems(
+    public List<OrderItem> itemsToOrderItems(
             @NotNull List<Item> orderItems) {
         return orderItems.stream().map(
                         orderItem ->
@@ -112,6 +113,14 @@ public class OrderDataMapper {
         return RateOrderResponse.builder()
                 .trackingId(order.getTrackingId())
                 .rating(orderRatingToRating(order.getRating()))
+                .message(message)
+                .build();
+    }
+
+    public UpdateAddItemsResponse orderToUpdateAddItemsResponse(Order order, String message) {
+        return UpdateAddItemsResponse.builder()
+                .trackingId(order.getTrackingId())
+                .items(orderItemsToItems(order.getItems()))
                 .message(message)
                 .build();
     }
