@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class OrderItem {
     // mutual
     private long id;
@@ -36,5 +36,12 @@ public class OrderItem {
         return subTotal != null && subTotal.equals(price.multiply(quantity));
     }
 
+    public OrderItem increaseQuantity(int addedQuantity) {
+        int newQuantity = this.quantity + addedQuantity;
+        return this.toBuilder()
+                .quantity(newQuantity)
+                .subTotal(price.multiply(newQuantity))
+                .build();
+    }
 }
 
