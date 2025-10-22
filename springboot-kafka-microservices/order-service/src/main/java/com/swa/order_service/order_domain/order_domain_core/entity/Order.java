@@ -11,7 +11,9 @@ import lombok.Getter;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder(toBuilder = true)
@@ -109,6 +111,8 @@ public class Order {
         rating = orderRating;
     }
 
+    // ====== Update add ======
+
     public void checkIfOrderStatusIsPending() {
         if (this.orderStatus != OrderStatus.PENDING) {
             throw new OrderDomainException("Order status is not valid (must be PENDING)");
@@ -123,7 +127,6 @@ public class Order {
         }
         Order updatedAddOrder = addItemsAndCalculatePrice(items);
         validateTotalPrice();
-        //
         return updatedAddOrder;
     }
 
@@ -166,12 +169,66 @@ public class Order {
                 .build();
     }
 
+    // ===== End: Update Add =======
+
     // Helper method: Tính tổng tiền của danh sách item
     private Money calculateTotalPrice(List<OrderItem> items) {
         return items.stream()
                 .map(OrderItem::getSubTotal)
                 .reduce(Money.ZERO, Money::add);
     }
+
+    // ===== Update Delete =====
+
+    public Order validateAndUpdateDeleteItems(List<UUID> productIds) {
+        checkIfOrderStatusIsPending();
+        if (productIds == null || productIds.isEmpty()) {
+            throw new OrderDomainException("Danh sách productId cần xoá không được rỗng");
+        }
+        Order updatedDeleteOrder = deleteItemsAndCalculatePrice(productIds);
+        validateTotalPrice();
+        return updatedDeleteOrder;
+    }
+
+    public Order deleteItemsAndCalculatePrice(List<UUID> productIds) {
+        // Lấy danh sách productId hiện có trong order
+        // Duyệt qua this.items để lấy ra set productId
+        Set<UUID> existingProductIds = this.items.stream()
+                // map(): chuyển đổi 1 tập hợp thành tập hợp mới dựa vào function input vào nó
+                // ở đây nó set items -> set các id
+                .map(item -> item.getProductId())
+                // Gom các phần tử lại bằng collect
+                // Cụ thể ở đây ta gom lại thành set với Collectors.toSet()
+                .collect(Collectors.toSet());
+
+        // Kiểm tra xem các productId (input) cần xoá
+        // có tồn tại trong danh sách productId hiện có trong order (existingProductIds) không
+        boolean allExist = existingProductIds.containsAll(productIds);
+        if (!allExist) {
+            throw new OrderDomainException("Một hoặc nhiều sản phẩm cần xoá không tồn tại trong đơn hàng");
+        }
+
+        // Xoá item tương ứng
+        List<OrderItem> updatedItems = this.items.stream()
+                // filter(): lọc ra các phần tử mới dựa vào điều kiện input vào nó
+                .filter(item -> !productIds.contains(item.getProductId()))
+                // Gom các phần tử lại thành List
+                .collect(Collectors.toList());
+
+        if (updatedItems.isEmpty()) {
+            throw new OrderDomainException("Không thể xoá hết toàn bộ sản phẩm trong đơn hàng");
+        }
+
+        // Cập nhật lại danh sách item & tổng tiền
+        Money updatedPrice = calculateTotalPrice(updatedItems);
+
+        return this.toBuilder()
+                .items(updatedItems)
+                .price(updatedPrice)
+                .build();
+    }
+
+    // ===== End: Update Delete =====
 
 
     /**
