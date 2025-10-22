@@ -8,6 +8,8 @@ import com.swa.order_service.order_domain.order_application_service.dto.rating.R
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.delete.UpdateDelItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.delete.UpdateDelItemsResponse;
 import com.swa.order_service.order_domain.order_application_service.ports.input.OrderApplicationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,21 @@ public class OrderController {
                         updateAddOrderItemsCommand
                 );
         log.info("Update add order items result: {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/delete")
+    public ResponseEntity<UpdateDelItemsResponse> updateDeleteItem(
+            @Valid @RequestBody UpdateDelItemsCommand updateDelItemsCommand
+    ) {
+        log.info("Update - deleteing items for order with ID: {}",
+                updateDelItemsCommand.getTrackingId()
+        );
+        UpdateDelItemsResponse response =
+                orderApplicationService.updateDeleteItems(
+                        updateDelItemsCommand
+                );
+        log.info("Update delete order items result: {}", response);
         return ResponseEntity.ok(response);
     }
 
