@@ -1,0 +1,5 @@
+com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsCommand.class
+com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsResponse.class
+com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsCommand$UpdateAddItemsCommandBuilder.class
+com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsResponse$UpdateAddItemsResponseBuilder.class
+com\swa\order_service\order_domain\order_application_service\handler\UpdateAddItemsHandler.class
