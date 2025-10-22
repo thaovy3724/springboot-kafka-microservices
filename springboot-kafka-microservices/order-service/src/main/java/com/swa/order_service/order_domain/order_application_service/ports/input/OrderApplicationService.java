@@ -1,11 +1,14 @@
 package com.swa.order_service.order_domain.order_application_service.ports.input;
 
+import com.swa.order_service.order_domain.order_application_service.dto.Item;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.create.CreateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.history.HistoryOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderCommand;
 import com.swa.order_service.order_domain.order_application_service.dto.rating.RateOrderResponse;
 import com.swa.order_service.order_domain.order_application_service.dto.statistics.StatisticsResponse;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsCommand;
+import com.swa.order_service.order_domain.order_application_service.dto.update.add.UpdateAddItemsResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +22,8 @@ public interface OrderApplicationService {
     StatisticsResponse getStatistics();
     // UseCase: Rate order
     RateOrderResponse rateOrder(RateOrderCommand command);
+
+    UpdateAddItemsResponse updateAddItems(UpdateAddItemsCommand command);
 //    //UseCase:Trackorder
 //    TrackOrderResponsetrackOrder(TrackOrderQueryquery);
 //    //UseCase:Cancelorder
