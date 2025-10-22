@@ -2,4 +2,5 @@ com\swa\order_service\order_domain\order_application_service\dto\update\add\Upda
 com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsResponse.class
 com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsCommand$UpdateAddItemsCommandBuilder.class
 com\swa\order_service\order_domain\order_application_service\dto\update\add\UpdateAddItemsResponse$UpdateAddItemsResponseBuilder.class
+com\swa\order_service\order_domain\order_application_service\handler\UpdateDeleteItemsHandler.class
 com\swa\order_service\order_domain\order_application_service\handler\UpdateAddItemsHandler.class
