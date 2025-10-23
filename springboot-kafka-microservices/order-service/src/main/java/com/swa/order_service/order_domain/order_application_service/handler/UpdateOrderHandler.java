@@ -14,10 +14,5 @@ public class UpdateOrderHandler {
         this.repository = repository;
     }
 
-    public AddOrderItemsResponse addOrderItems(AddOrderItemsCommand command){
-
-    }
-
-
 }
 

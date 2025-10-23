@@ -54,10 +54,6 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
         return rateOrderHandler.rateOrder(command);
     }
 
-    // UseCase: Add order items
-    AddOrderItemsResponse updateAddOrderItems(AddOrderItemsCommand command){
-        return
-    }
     // Use Case: Track order
 //    @Override
 //    TrackOrderResponse trackOrder(TrackOrderQuery query){

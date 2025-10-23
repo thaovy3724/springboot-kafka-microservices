@@ -21,8 +21,7 @@ public interface OrderApplicationService {
     StatisticsResponse getStatistics();
     // UseCase: Rate order
     RateOrderResponse rateOrder(RateOrderCommand command);
-    // UseCase: Add order items
-    AddOrderItemsResponse updateAddOrderItems(AddOrderItemsCommand command);
+
 //    //UseCase:Trackorder
 //    TrackOrderResponsetrackOrder(TrackOrderQueryquery);
 //    //UseCase:Cancelorder
