@@ -22,6 +22,7 @@
         <module>payment-service</module>
         <module>common</module>
         <module>restaurant-service</module>
+        <module>common/common-domain</module>
     </modules>
 
     <properties>

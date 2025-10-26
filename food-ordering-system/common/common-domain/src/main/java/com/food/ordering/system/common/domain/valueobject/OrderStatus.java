@@ -1,4 +1,4 @@
-package com.food.ordering.system.order.service.domain.valueobject;
+package com.food.ordering.system.common.domain.valueobject;
 
 public enum OrderStatus {
     PENDING,
