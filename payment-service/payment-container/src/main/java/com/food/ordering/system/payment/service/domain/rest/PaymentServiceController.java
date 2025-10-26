@@ -1,6 +1,8 @@
 package com.food.ordering.system.payment.service.domain.rest;
 
 import com.food.ordering.system.payment.service.domain.ports.input.message.listener.PaymentRequestMessageListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +17,8 @@ public class PaymentServiceController {
     }
 
     @PostMapping
-    public PaymentResponse createPayment() {
-
+    public ResponseEntity<PaymentResponse> createPayment() {
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(PaymentResponse);
     }
 }
