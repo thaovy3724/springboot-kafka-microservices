@@ -1,4 +1,4 @@
-package com.food.ordering.system.order.service.messaging.config;
+package com.food.ordering.system.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -34,7 +34,7 @@ public class KafkaConfig {
     }
     @Bean
     public NewTopic taskTopic() {
-        return TopicBuilder.name("order-topic")
+        return TopicBuilder.name("payment-topic")
                 .partitions(1)
                 .replicas(1)
                 .build();

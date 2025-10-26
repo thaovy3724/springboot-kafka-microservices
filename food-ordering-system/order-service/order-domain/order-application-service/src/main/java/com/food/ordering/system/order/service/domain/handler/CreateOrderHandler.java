@@ -30,6 +30,12 @@ public class CreateOrderHandler {
         if(orderSaved == null)
             throw new OrderDomainException("Order can not be saved");
 
+        // Call payment-service
+        // create event
+        // messagingDTO = publisher.send(event)
+
+        // messaging-mapper: event <-> messagingDTO
+
         // Return Response DTO
         return mapper.orderToCreateOrderResponse(orderSaved, "Create order successfully!");
     }
